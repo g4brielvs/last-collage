@@ -4,10 +4,11 @@
 
 """app.py: Python Serverless Microframework"""
 
+import io
 import json
 
 from chalice import Chalice, Response
-from chalicelib.helpers import upload_to_s3
+from chalicelib.helpers import upload_obj_to_s3, get_images, create_collage
 
 app = Chalice(app_name='app')
 
@@ -21,18 +22,36 @@ def index():
                     headers={'Content-Type': 'application/json'})
 
 
-@app.route('/upload', methods=['PUT'], content_types=['application/octet-stream'])
+@app.route('/upload', methods=['POST'], content_types=['application/octet-stream'])
 def upload():
 
     # get raw body of PUT request
-    data = app.current_request.raw_body
+    body = app.current_request.raw_body
+    buffer = io.BytesIO(body)
 
     # upload to S3
-    url = upload_to_s3(data) 
+    url = upload_obj_to_s3(buffer) 
 
-    body = {'url' : url}
-    
-    return Response(body=json.dumps(body),
+    response = {'url' : url}
+    return Response(body=json.dumps(response),
                     status_code=201,
                     headers={'Content-Type': 'application/json'})
 
+@app.route('/collage/{user}')
+def collage(user):
+
+    images = get_images(user)
+    im = create_collage(images)
+
+    # buffering
+    buffer = io.BytesIO()
+    im.save(buffer, "PNG")
+    buffer.seek(0)
+    
+    # upload to S3
+    url = upload_obj_to_s3(buffer) 
+
+    response = {'url' : url}
+    return Response(body=json.dumps(response),
+                    status_code=201,
+                    headers={'Content-Type': 'application/json'})
