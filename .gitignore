@@ -107,5 +107,6 @@ venv.bak/
 .vscode/
 
 # Chalice
+.chalice/
 .chalice/deployments/
 .chalice/venv/
