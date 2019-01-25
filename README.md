@@ -1,18 +1,26 @@
 # Last Collage - a playground with [Last.fm API](https://www.last.fm/api) and [Chalice](https://github.com/aws/chalice).
 
-Last Collage allows you to create beautiful collages of your favorites artirst based on your Last.fm history.
+Last Collage allows you to create beautiful collages of your favorite artists based on your Last.fm history.
 
-Just remember your `<lastfm_user>` and follow the link.
+## Getting Started
 
-[https://ybnryhkb94.execute-api.us-east-1.amazonaws.com/api/collage/<lastfm_user>](https://ybnryhkb94.execute-api.us-east-1.amazonaws.com/api/collage/)
+Just remember your `<lastfm_user>` and put it in the end of the link.
 
-And you will receive a link to a stunning collage like the one below.
+```
+https://ybnryhkb94.execute-api.us-east-1.amazonaws.com/api/collage/<lastfm_user>
+```
 
-<img src="https://s3.amazonaws.com/g4brielvs/9f7e2e5efcd94055a101b9610979c53e" width="400" height="400" />
+And you will get a JSON response with the link to a stunning collage like the one below.
+
+<p align="center">
+  <img src="https://s3.amazonaws.com/g4brielvs/9f7e2e5efcd94055a101b9610979c53e" width="400" height="400" />
+</p>
+
+
 
 ## How do I get up and running?
 
-You only need to set up your environment variables and install the packages in your virtualenv. And hit ```
+You only need to set up your environment variables and install the packages in your virtualenv.
 
 ```
 pip install -r requirements.txt
@@ -33,13 +41,13 @@ chalice local
 
 ### JSON API endpoints
 
+#### Status
+
+##### `GET /api/`
+
 #### Collage
 
 ##### `GET /api/<lastfm_user>/`
-
-#### Status
-
-##### `GET /api/status/`
 
 #### Upload
 
@@ -48,11 +56,11 @@ chalice local
 ## Examples
 
 ```
-curl -X GET https://ybnryhkb94.execute-api.us-east-1.amazonaws.com/api/collage/g4brielvs"
+curl -X GET https://ybnryhkb94.execute-api.us-east-1.amazonaws.com/api/"
 ```
 
 ```
-curl -X GET https://ybnryhkb94.execute-api.us-east-1.amazonaws.com/api/status"
+curl -X GET https://ybnryhkb94.execute-api.us-east-1.amazonaws.com/api/collage/g4brielvs"
 ```
 
 ```
