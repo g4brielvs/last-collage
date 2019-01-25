@@ -70,7 +70,7 @@ def get_images(user):
     return images
             
 def create_collage(cells, rows=4, cols=4):
-
+    
     w, h = Image.open(BytesIO(cells[0]['data'])).size
     collage_width = cols * w
     collage_height = rows * h
