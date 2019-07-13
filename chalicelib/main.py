@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
-"""helpers.py: Helpers"""
+"""main.py: Main"""
 
 import os
 import hashlib
@@ -16,7 +15,8 @@ from boto3 import client
 
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
-BUCKET = os.environ['BUCKET']
+AWS_BUCKET = os.environ['AWS_BUCKET']
+LASTFM_SECRET = os.environ['LASTFM_SECRET']
 
 def upload_obj_to_s3(obj):
 
@@ -24,13 +24,11 @@ def upload_obj_to_s3(obj):
             aws_access_key_id=AWS_ACCESS_KEY_ID,
             aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
             region_name='us-east-1')
-
-    key = uuid.uuid4().hex
-
     try:
+        key = uuid.uuid4().hex
         S3.upload_fileobj(
             obj,
-            BUCKET,
+            AWS_BUCKET,
             key,           
             ExtraArgs={
                 "ACL": "public-read",
@@ -41,29 +39,29 @@ def upload_obj_to_s3(obj):
     except Exception as e:
         return e
 
-    return f'https://s3.amazonaws.com/{BUCKET}/{key}'
+    return f'https://s3.amazonaws.com/{AWS_BUCKET}/{key}'
 
 def get_images(user):
 
     url = "http://ws.audioscrobbler.com/2.0/"
     body = {
-        'method': 'user.gettopartists',
-        'user': f'{user}',
-        'api_key': 'b04685c7c48c3911ba291b0f488d0713',
+        'method': 'user.gettopalbums',
+        'user': user,
+        'api_key': LASTFM_SECRET,
         'limit': 16,
         'period': 'overall',
         'format': 'json'
     }
     r = requests.get(url, body)
 
-    artists = r.json()['topartists']['artist']
+    items = r.json()['topalbums']['album']
     images = []
-    for a in artists:
-        image_url = a['image'][3]['#text']
+    for item in items:
+        image_url = item['image'][3]['#text']
         if image_url:
             r = requests.get(image_url)
             image = {
-                'name': a['name'],
+                'name': item['name'],
                 'data': r.content
             }
             images.append(image)
