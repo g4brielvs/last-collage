@@ -13,7 +13,7 @@ jmespath==0.9.3
 more-itertools==5.0.0
 Pillow==6.2.0
 pluggy==0.8.1
-py==1.7.0
+py==1.10.0
 pytest==4.1.1
 python-dateutil==2.7.5
 requests==2.21.0
